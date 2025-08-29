@@ -1,3 +1,6 @@
+!This code was taken from the official OSIRIS website: https://osiris-code.github.io/
+!I do not claim credit for this file.
+
 node_conf {
   !node_number(1:2) =  2, 2,           ! Use 2 x 2 parallel nodes
   if_periodic(1:2) = .true., .true.,  ! Periodic boundaries in both x and y
