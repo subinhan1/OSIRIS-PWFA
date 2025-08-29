@@ -1,0 +1,99 @@
+!Initial fluid velocity of protons to 0.0
+!Initial fluid velocity of electrons to 0.0
+
+node_conf {
+  !node_number(1:2) =  2, 2,           ! Use 2 x 2 parallel nodes
+  if_periodic(1:2) = .true., .true.,  ! Periodic boundaries in both x and y
+  !n_threads = 2,                      ! Use 2 threads per node
+}
+
+grid { 
+  nx_p(1:2) = 256, 256,               ! Use a 256 x 256 grid
+}
+
+time_step {
+  dt     =   0.07,                    ! \Delta t = 0.07
+  ndump  =  5,                        ! Global diagnostic frequency set to 5
+}
+
+space {
+  xmin(1:2) =   -12.8 , -12.8,        ! Simulation box will range from -12.8 to 12.8
+  xmax(1:2) =    12.8 ,  12.8,        ! in both dimensions
+}
+
+time {
+  tmax  = 15.0,                       ! Run simulation up to t = 15
+}
+
+emf_bound {
+  ! No need to set because we are using periodic boundaries
+}
+
+diag_emf {
+  ndump_fac = 10,                     ! diagnostics at every 10 * 5 = 50 timesteps
+  reports = "b1", "b2", "b3",         ! save all magnetic field components
+}
+
+zpulse {
+  a0 = 1.0,                  !peak intensity of laser in units of c
+  omega0 = 10.0,              !laser freq. / plasma freq.
+  pol = 45.0d0,              !polarization in degrees
+  propagation = "forward",   !propagation direction
+  lon_type = "polynomial",   !longitudinal profile
+  lon_rise = 6.0,            !time parameters for polynomial profile
+  lon_flat = 0.0,
+  lon_fall = 6.0,
+  lon_start = -4,            !position of front of laser pulse
+  per_type = "gaussian",     !perpendicular profile
+  per_w0 = 4.0,              !parameters for perpendicular profile
+  per_focus = 6.4,           !longitudinal position of focal plane of pulse
+  per_center(1:2) = 6.4, 6.4, !transverse coordinates of focal plane
+}
+
+particles {
+  num_species = 2,                    ! Use 2 particle species
+}
+
+
+species {
+  name = "electrons" ,                ! Name used for diagnostics
+  num_par_x(1:2) = 8, 8,              ! 8 x 8 particles per cell
+  rqm=-1.0,                           ! m/q = -1 (electrons)
+}
+
+
+udist {
+  uth(1:3) =  0.0 , 0.0 , 0.0 ,       ! Initial thermal velocity
+  ufl(1:3) =  0.0 , 0.0 , 0.0 ,       ! Initial fluid velocity (0.6 c along z)
+}
+
+spe_bound {
+  ! No need to set because we are using periodic boundaries
+}
+
+species
+{
+  name = "protons" ,                ! Name used for diagnostics
+  num_par_x(1:2) = 8, 8,              ! 8 x 8 particles per cell
+  rqm=+1836.0,                           ! m/q = +1826 (protons)
+}
+
+udist
+{
+  uth(1:3) =  0.0 , 0.0 , 0.0 ,       ! Initial thermal velocity
+  ufl(1:3) =  0.0 , 0.0 , 0.0 ,      ! Initial fluid velocity (0.6 c along -z)
+}
+
+spe_bound {
+  ! No need to set because we are using periodic boundaries
+}
+
+current{}
+
+
+diag_current {
+  ndump_fac = 10,                       ! diagnostics at every 10 * 5 = 50 timesteps
+  reports = "j3",                       ! save z component of current density
+}
+
+
